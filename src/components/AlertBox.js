@@ -4,6 +4,35 @@ import { Text, StyleSheet, View ,Animated ,Easing  , Dimensions,Button  , Toucha
 
 const dim = Dimensions.get('window')
 
+export const actionTypes = {
+    error:{
+        type:'ERROR',
+        color:'#ed2a2a'
+    },
+    
+    success:{
+        type:"SUCCESS",
+        color:'#09ea27'
+    },
+    
+    warning:{
+        type:"WARNING",
+        color:'#ffc444'
+    },
+    
+    info:{
+        type:'INFO',
+        color:'#6e88ad'
+    },
+    question:{
+        type:"QUESTION",
+        color:'#383838'
+    },
+    
+
+    
+
+}
 export default  class AlertBox extends Component {
 constructor(props){
     super(props)
@@ -14,8 +43,41 @@ constructor(props){
     }
     
 }
+getAlertType=()=>{
+
+    switch (this.props.type) {
+        case 'QUESTION':
+        
+        this.setState({color:actionTypes.question.color})
+            break;
+        case 'INFO':
+        
+        this.setState({color:actionTypes.info.color})
+            break;
+        case 'ERROR':
+        
+        this.setState({color:actionTypes.error.color})
+            break;
+        case 'WARNING':
+        
+        this.setState({color:actionTypes.warning.color})
+            
+            break;
+        case 'SUCCESS':
+        
+        this.setState({color:actionTypes.success.color})
+
+            break;
+
+    }
+}
+componentDidMount(){
+    this.startAnimation()
+}
+
     componentWillMount(){
-        this.startAnimation()
+        this.getAlertType()
+        
     }
 
     startAnimation=()=>{
@@ -41,7 +103,7 @@ constructor(props){
         <View style={styles.container} >
         <Animated.View style={[styles.box,{opacity:this.state.fader,transform:[{scale:this.state.scaler}]}]} >
         
-        <Text  style={[styles.headerText,{color:this.props.color}]} >{this.props.message}</Text>
+        <Text  style={[styles.headerText,{color:this.state.color}]} >{this.props.message}</Text>
         
         <TouchableOpacity style={styles.closeButton} onPress={this.props.hide} >
         <Image style={styles.closeButtonImage} source={require("../assets/images/cancel.png")}/>
@@ -87,7 +149,7 @@ alignItems: 'center',
 
     },
     headerText:{
-        fontSize:20,
+        fontSize:18,
         fontWeight: '600',
     },
     closeButton:{

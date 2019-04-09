@@ -8,38 +8,11 @@ const dim = Dimensions.get('window')
 const initialState = {
     isShow: false,
     payload: null,
-    colorType:"#6e88ad",
+    message:null,
+    type:"INFO"
     
 }
-export const types = {
-    error:{
-        type:'ERROR',
-        color:'#ed2a2a'
-    },
-    
-    success:{
-        type:"SUCCESS",
-        color:'#09ea27'
-    },
-    
-    warning:{
-        type:"WARNING",
-        color:'#ffc444'
-    },
-    
-    info:{
-        type:'INFO',
-        color:'#6e88ad'
-    },
-    question:{
-        type:"QUESTION",
-        color:'#383838'
-    },
-    
 
-    
-
-}
 
 export default WithAlertBox = WrappedComponent => {
     return class Dialog extends Component {
@@ -49,49 +22,35 @@ export default WithAlertBox = WrappedComponent => {
                 ...initialState
             }
         }
-        hide =()=>{
+        hide (){
             this.setState({isShow:false})
         }
-        show =()=>{
+        show (){
             this.setState({isShow:true})
           
         }
-        getAlertType=()=>{
-            switch (this.props.actionType) {
-                case 'QUESTION':
-                this.setState({colorType:types.question.color})
-                    break;
-                case 'INFO':
-                this.setState({colorType:types.info.color})
-                    break;
-                case 'ERROR':
-                this.setState({colorType:types.error.color})
-                    break;
-                case 'WARNING':
-                this.setState({colorType:types.warning.color})
-                    
-                    break;
-                case 'SUCCESS':
-                this.setState({colorType:types.success.color})
-
-                    break;
-
-            }
+        setMessage(message){
+            this.setState({message:message})
+  }
+        setType(type){
+            this.setState({type:type})
         }
-        componentDidMount(){
-            this.getAlertType()
+        pushToAlert(message , type , options){
+            this.setMessage(message)
+            this.setType(type)
+            this.show()
         }
-        render(){
+       render(){
             const {isShow} = this.state
             
            
             return (
             <View  style={styles.container} >
-                <WrappedComponent  {...this.props} show={this.show} hide={this.hide} />
+                <WrappedComponent  {...this.props} show={this.show.bind(this)} hide={this.hide.bind(this)} pushToAlert={this.pushToAlert.bind(this)} />
 
                 {isShow && 
                 
-                <AlertBox  {...this.props}  hide={this.hide} color={this.state.colorType}  type={this.state.messageType} />
+                <AlertBox  {...this.props}  message={this.state.message}  hide={this.hide.bind(this)}  type={this.state.type} />
                 }
                <View style={{height:100, flexDirection: 'row',}}>
                
